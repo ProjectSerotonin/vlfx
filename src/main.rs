@@ -81,7 +81,7 @@ fn main() -> Result<()>{
 
         let key = std::fs::read(key_file_path)?;
         
-        let decrypter = fanatec_decrypt::FanatecDecrypter::new(key)
+        let decrypter = fanatec_decrypt::FanatecDecrypter::new(&key)
             .with_context(|| "Could not setup firmware decryption".to_string())?;
 
         let mut input_file = File::open(input_file_path)
