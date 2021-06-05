@@ -96,11 +96,9 @@ impl FanatecDecrypter {
             if read_size == 0 {
                 break;
             }
-            println!("{}", read_size);
             unsafe {
                 let mut r_siz = read_size as u32;
                 let r_siz_ptr = &mut r_siz as *mut u32;
-                println!("{}", *r_siz_ptr);
                 let err = WinCrypt::CryptDecrypt(self.windows_key_handle, 0, is_final, 0, buffer.as_mut_ptr(), r_siz_ptr);
                 if err == 0 {
                     return Err(FanatecDecrypterError::WinError(get_win_error("Error decrypting file")))
