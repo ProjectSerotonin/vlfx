@@ -1,10 +1,10 @@
-use std::{error::Error, ffi::CString, fmt, io::Read};
+use std::{ffi::CString, io::Read};
 use win32_error::Win32Error;
 use winapi::um::wincrypt as WinCrypt;
+use thiserror::{Error};
 
 // Fanatec encrypts files in chunks of this
 const CHUNK_SIZE: usize = 100000;
-
 pub struct FanatecDecrypter {
     windows_key_handle: WinCrypt::HCRYPTKEY
 }
@@ -17,19 +17,10 @@ impl Drop for FanatecDecrypter {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum FanatecDecrypterError {
+    #[error("Win32 Error: {0}")]
     WinError(String)
-}
-
-impl Error for FanatecDecrypterError {}
-
-impl fmt::Display for FanatecDecrypterError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            FanatecDecrypterError::WinError(s) => write!(f, "Win32 Error: {}", &s)
-        }
-    }
 }
 
 fn get_win_error(prefix: &str) -> String {

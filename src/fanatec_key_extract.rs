@@ -1,6 +1,7 @@
-use std::{error::Error, fmt, io::{Read, Seek, SeekFrom}};
+use std::{io::{Read, Seek, SeekFrom}};
 use sha1::{Sha1, Digest};
 use std::io;
+use thiserror::Error;
 const KEY_SIZE: usize = 16;
 
 // Maps the hash for the FwClubSportBaseUpdater.exe file to the offset where the key is located
@@ -10,27 +11,12 @@ fn hash_to_offset(hash: &str) -> Option<usize> {
         _ => None
     }
 }
-#[derive(Debug)]
+#[derive(Debug, Error)]
 pub enum FanatecKeyExtractError {
+    #[error("Binary not found in DB")]
     BinaryNotInDatabase,
-    IOError(std::io::Error)
-}
-
-impl From<std::io::Error> for FanatecKeyExtractError {
-    fn from(err: std::io::Error) -> Self {
-        FanatecKeyExtractError::IOError(err)
-    }
-}
-
-impl Error for FanatecKeyExtractError {}
-
-impl fmt::Display for FanatecKeyExtractError {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match self {
-            FanatecKeyExtractError::BinaryNotInDatabase => write!(f, "Binary not found in offset DB"),
-            FanatecKeyExtractError::IOError(e) => write!(f, "IO Error: {}", &e.to_string())
-        }
-    }
+    #[error("I/O Error: {0}")]
+    IOError(#[from] std::io::Error)
 }
 
 /// Tries to extract the key from the given FwClubSportBaseUpdater.exe
