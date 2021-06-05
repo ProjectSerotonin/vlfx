@@ -3,6 +3,7 @@ use sha1::{Sha1, Digest};
 use std::io;
 const KEY_SIZE: usize = 16;
 
+// Maps the hash for the FwClubSportBaseUpdater.exe file to the offset where the key is located
 fn hash_to_offset(hash: &str) -> Option<usize> {
     match hash {
         "64ee2e765dca4f27e67ed4dfa320192543fa69ed" => Some(0x1585F0),
@@ -32,6 +33,12 @@ impl fmt::Display for FanatecKeyExtractError {
     }
 }
 
+/// Tries to extract the key from the given FwClubSportBaseUpdater.exe
+///
+/// # Arguments
+///
+/// * `file` - The buffer to read from
+///
 pub fn extract_key(mut file: impl Read + Seek) -> Result<[u8; KEY_SIZE], FanatecKeyExtractError> {
     let mut hasher = Sha1::new();
     io::copy(&mut file, &mut hasher)?;

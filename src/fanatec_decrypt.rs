@@ -37,6 +37,12 @@ fn get_win_error(prefix: &str) -> String {
 }
 
 impl FanatecDecrypter {
+    /// Creates a ```FanatecDecrypter``` object and derives the key using Window's cryptographic provider
+    ///
+    /// # Arguments
+    ///
+    /// * `file` - The buffer to read from
+    ///
     pub fn new(key: Vec<u8>) -> Result<FanatecDecrypter, FanatecDecrypterError> {
         let provider_name = CString::new("Microsoft Enhanced RSA and AES Cryptographic Provider").expect("CString::new failed");
         let container_name = CString::new("").expect("CString::new failed");
@@ -80,7 +86,13 @@ impl FanatecDecrypter {
         Ok(FanatecDecrypter {
             windows_key_handle: hkey
         })
-    } 
+    }
+    /// Decrypts the fanatec firmware file
+    ///
+    /// # Arguments
+    ///
+    /// * `file` - The buffer to read from
+    ///
     pub fn decrypt(self, file: &mut impl Read) -> Result<Vec<u8>, FanatecDecrypterError> {
         let mut output = Vec::new();
 
