@@ -44,7 +44,7 @@ OPTIONS:
     -o, --output <FILE>     [default: fanatec_key.key]
 ```
 
-# Decrypt firmware mode
+## Decrypt firmware mode
 
 ```
 vlfx.exe decrypt_firmware --help
