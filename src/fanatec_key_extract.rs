@@ -34,6 +34,6 @@ pub fn extract_key<T>(mut file: T) -> Result<[u8; KEY_SIZE], FanatecKeyExtractEr
     let offset = hash_to_offset(&format!("{:x}", hash)).ok_or(FanatecKeyExtractError::BinaryNotInDatabase)?;
     let mut key: [u8; KEY_SIZE] = [0; KEY_SIZE];
     file.seek(SeekFrom::Start(offset as u64))?;
-    file.read(&mut key)?;
+    file.read_exact(&mut key)?;
     Ok(key)
 }

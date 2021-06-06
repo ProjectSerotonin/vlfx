@@ -92,7 +92,7 @@ fn main() -> Result<()>{
 
         let mut output_file = File::create(output_file_path)
             .with_context(|| format!("Could not open output file: {}", output_file_path))?;
-        output_file.write(&decrypted_file_contents)?;
+        output_file.write_all(&decrypted_file_contents)?;
         println!("Wrote decrypted firmware to {} succesfully!", output_file_path)
     };
     
