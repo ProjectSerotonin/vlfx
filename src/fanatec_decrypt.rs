@@ -84,7 +84,9 @@ impl FanatecDecrypter {
     ///
     /// * `file` - The buffer to read from
     ///
-    pub fn decrypt(self, file: &mut impl Read) -> Result<Vec<u8>, FanatecDecrypterError> {
+    pub fn decrypt<T>(self, file: &mut T) -> Result<Vec<u8>, FanatecDecrypterError>
+        where T: Read
+    {
         let mut output = Vec::new();
 
         let mut buffer: [u8; CHUNK_SIZE] = [0; CHUNK_SIZE];

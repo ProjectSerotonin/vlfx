@@ -25,7 +25,9 @@ pub enum FanatecKeyExtractError {
 ///
 /// * `file` - The buffer to read from
 ///
-pub fn extract_key(mut file: impl Read + Seek) -> Result<[u8; KEY_SIZE], FanatecKeyExtractError> {
+pub fn extract_key<T>(mut file: T) -> Result<[u8; KEY_SIZE], FanatecKeyExtractError>
+    where T: Read + Seek
+{
     let mut hasher = Sha1::new();
     io::copy(&mut file, &mut hasher)?;
     let hash = hasher.finalize();
