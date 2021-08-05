@@ -8,6 +8,7 @@ const KEY_SIZE: usize = 16;
 fn hash_to_offset(hash: &str) -> Option<usize> {
     match hash {
         "64ee2e765dca4f27e67ed4dfa320192543fa69ed" => Some(0x1585F0),
+        "51d662d68291a9c2d81ce5cb910fa2a5918398b4" => Some(0x157F58),
         _ => None
     }
 }
