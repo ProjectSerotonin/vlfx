@@ -5,6 +5,7 @@ use thiserror::{Error};
 
 // Fanatec encrypts files in chunks of this
 const CHUNK_SIZE: usize = 100000;
+const DECRYPTION_KEY: &[u8] = "!!endorfanatec!!".as_bytes();
 pub struct FanatecDecrypter {
     windows_key_handle: WinCrypt::HCRYPTKEY
 }
@@ -34,7 +35,7 @@ impl FanatecDecrypter {
     ///
     /// * `file` - The buffer to read from
     ///
-    pub fn new(key: &[u8]) -> Result<FanatecDecrypter, FanatecDecrypterError> {
+    pub fn new() -> Result<FanatecDecrypter, FanatecDecrypterError> {
         let provider_name = CString::new("Microsoft Enhanced RSA and AES Cryptographic Provider").expect("CString::new failed");
         let container_name = CString::new("").expect("CString::new failed");
 
@@ -53,7 +54,7 @@ impl FanatecDecrypter {
             if err == 0 {
                 return Err(FanatecDecrypterError::WinError(get_win_error("Error creating hash")))
             }
-            err = WinCrypt::CryptHashData(base_data, key.as_ptr(), key.len() as u32, 0);
+            err = WinCrypt::CryptHashData(base_data, DECRYPTION_KEY.as_ptr(), DECRYPTION_KEY.len() as u32, 0);
             if err == 0 {
                 return Err(FanatecDecrypterError::WinError(get_win_error("Error adding data to hash")))
             }
